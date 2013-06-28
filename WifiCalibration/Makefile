@@ -1,6 +1,6 @@
 SRCFILE = WifiCalibration.tex
 LATEXCOM = xelatex
-OUTFILE = *.pdf *.log *.aux *.out *.toc *~
+OUTFILE = *.gz *.pdf *.log *.aux *.out *.toc *~
 CLEANCOM = rm -rf
 
 all:
