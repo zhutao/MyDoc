@@ -26,7 +26,7 @@
 基于正态分布概率和支持向量机原理的WIFI定位技术，完全采用软件通过科学计算来实现。该技术不需要依赖专用设备，部署简单使用便捷，对环境无强制依赖，可以在复杂WIFI环境下实现移动设备精确定位。该WIFI定位技术的核心原理是支持向量机，辅助计算的数学工具是正态分布的概率模型。整体技术框架为，采用正态分布概率模型筛选校准信息，同时确定移动设备大致方位，之后将筛选出的校准信息与移动设备实时采集到的WIFI信息进行支持向量机计算，最终确定移动设备的准确位置。该技术不依赖特殊硬件设备，不对环境做特殊要求，旨针对实际应用提供完整技术方案。
 \par
 \noindent{\textbf{关键词}：}
-待定位点(LP)，校准点(CP)，WIFI接入点(AP)，标准差($\mathnormal{\sigma}$)，方差($\mathnormal{\sigma}^{2}$)，正态分布(Normal)，支持向量机(SVM)，概率(Pl)，WIFI信号值(RSS)，WIFI信号平均值(mRSS)
+待定位点(LP)，校准点(CP)，WIFI接入点(AP)，标准差($\mathnormal{\sigma}$)，方差($\mathnormal{\sigma}^{2}$)，正态分布(Normal)，支持向量机(SVM)，概率(Pr)，WIFI信号值(RSS)，WIFI信号平均值(mRSS)
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -137,9 +137,112 @@ WIFI定位技术目前有多种实现方法，但在具体应用中都存在一�
 \end{compactitem}
 
 \subsection{建立位置校准表}
+根据原始数据表，建立位置校准表。位置校准表，是WIFI定位功能的核心数据表，根据校准数据表的计算实现最终定位目的。
+\par
+位置校准表是对原始数据表中，每个区域每次采集到的AP，处理后得到，有效信息是区域ID(value)、AP的MAC地址(bssid)、AP的信号平均值(mRSS)、AP的信号离散度($\sigma$)。具体步骤如下：
+\par
+\begin{compactitem}
+\item\textbf{从原始数据表中，查出有效定位空间中所有的区域ID(CP value)。}
+\item\textbf{根据CP value，查出每个区域中采样得到的所有AP信息}
+\item\textbf{根据AP出现的次数和每次AP的信号值(RSS)，计算得出每个AP在该CP中的信号平均值(mRSS)}
+\item\textbf{根据单个AP信号的各个RSS，和该AP的信号mRSS，计算出该AP的信号方差($\sigma^{2}$)}
+\item\textbf{将每个AP对应的CP value、AP的MAC地址(bssid)、mRSS、$\sigma^{2}$，存入数据库，形成定位校准表}
+\end{compactitem}
+
 \subsubsection{计算AP信号物理值}
+计算AP信号的平均值，必须将原始数据中，AP信号指数值计算成物理值。移动设备接收到的AP信号值，都是物理值以10位底的对数，单位是dbm。dbm与物理信号值的换算公式如下：
+\begin{displaymath}
+dbm=10\lg{P}
+\end{displaymath}
+P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计算方法：
+\begin{displaymath}
+P=10^{\frac{dbm}{10}}
+\end{displaymath}
+
 \subsubsection{计算CP中所有AP信号平均值和标准差}
+计算AP的信号平均值，首先要将AP每次采集到的信号指数值换算成物理信号值，再将这些信号物理值相加，并除以该AP出现的次数。如果一个CP中采集到的一个AP共出现了N次，那么这个AP的限号平均值计算方法如下：
+\begin{displaymath}
+mRSS=10\lg\left(\frac{1}{N}\sum^{N}_{i=1}10^{\frac{RSS_{i}}{10}}\right)
+\end{displaymath}
+得到AP的信号平均值后，就可以计算出该AP的信号离散度，也就是该AP信号的方差($\sigma^{2}$)和标准差($\sigma$)，具体计算公式如下：
+\begin{displaymath}
+\sigma^{2}=\frac{1}{N-1}\sum^{N}_{i=1}\left(mRSS-RSS_{i}\right)^{2}
+\end{displaymath}
+标准差是方差的算术平方根，两者都代表一组数据的行对离散程度，在具体的概率计算中各自的使用有细微差别。基于生态分布的概率计算中，方差和标准差都可以使用。
+
 \subsubsection{生成校准表}
+总结校准表的生成过程，一下图组可以表示：
+\begin{displaymath}
+\begin{array}{c|c}
+CP_{value} & AP_{i} \\ \hline
+CP_{0} & MAC_{1} \\
+CP_{0} & MAC_{2} \\
+CP_{0} & MAC_{3} \\
+CP_{0} & MAC_{4} \\
+CP_{0} & MAC_{5} \\
+... & ...
+\end{array}
+\end{displaymath}
+
+\begin{displaymath}
+\begin{array}{c|c|c}
+CP_{value} & AP_{i} & RSS_{(i,j)} \\ \hline
+CP_{0} & MAC_{1} & RSS_{(1,1)}...RSS_{(1,i)} \\
+CP_{0} & MAC_{2} & RSS_{(2,1)}...RSS_{(1,i)} \\
+CP_{0} & MAC_{3} & RSS_{(3,1)}...RSS_{(1,i)} \\
+CP_{0} & MAC_{4} & RSS_{(4,1)}...RSS_{(1,i)} \\
+CP_{0} & MAC_{5} & RSS_{(5,1)}...RSS_{(1,i)} \\
+... & ... & ...
+\end{array}
+\end{displaymath}
+
+\begin{displaymath}
+\begin{array}{c|c|c}
+CP_{value} & AP_{i} & mRSS_{i} \\ \hline
+CP_{0} & MAC_{1} & mRSS_{1} \\
+CP_{0} & MAC_{2} & mRSS_{2} \\
+CP_{0} & MAC_{3} & mRSS_{3} \\
+CP_{0} & MAC_{4} & mRSS_{4} \\
+CP_{0} & MAC_{5} & mRSS_{5} \\
+... & ... & ...
+\end{array}
+\end{displaymath}
+
+\begin{displaymath}
+\begin{array}{c|c|c|c}
+CP_{value} & AP_{i} & mRSS_{i} & \sigma^{2}_{i} \\ \hline
+CP_{0} & MAC_{1} & mRSS_{1} & \sigma^{2}_{1} \\
+CP_{0} & MAC_{2} & mRSS_{2} & \sigma^{2}_{2} \\
+CP_{0} & MAC_{3} & mRSS_{3} & \sigma^{2}_{3} \\
+CP_{0} & MAC_{4} & mRSS_{4} & \sigma^{2}_{4} \\
+CP_{0} & MAC_{5} & mRSS_{5} & \sigma^{2}_{5} \\
+... & ... & ... & ...
+\end{array}
+\end{displaymath}
+
+\begin{displaymath}
+\begin{array}{c|c|c|c}
+CP_{value} & AP_{i} & mRSS_{i} & \sigma^{2}_{i} \\ \hline
+CP_{0} & MAC_{1} & mRSS_{1} & \sigma^{2}_{1} \\
+CP_{0} & MAC_{2} & mRSS_{2} & \sigma^{2}_{2} \\
+CP_{0} & MAC_{3} & mRSS_{3} & \sigma^{2}_{3} \\
+CP_{0} & MAC_{4} & mRSS_{4} & \sigma^{2}_{4} \\
+CP_{0} & MAC_{5} & mRSS_{5} & \sigma^{2}_{5} \\
+... & ... & ... & ... \\
+CP_{1} & MAC_{1} & mRSS_{1} & \sigma^{2}_{1} \\
+CP_{1} & MAC_{2} & mRSS_{2} & \sigma^{2}_{2} \\
+CP_{1} & MAC_{3} & mRSS_{3} & \sigma^{2}_{3} \\
+CP_{1} & MAC_{4} & mRSS_{4} & \sigma^{2}_{4} \\
+CP_{1} & MAC_{5} & mRSS_{5} & \sigma^{2}_{5} \\
+... & ... & ... & ... \\
+CP_{2} & MAC_{1} & mRSS_{1} & \sigma^{2}_{1} \\
+CP_{2} & MAC_{2} & mRSS_{2} & \sigma^{2}_{2} \\
+CP_{2} & MAC_{3} & mRSS_{3} & \sigma^{2}_{3} \\
+CP_{2} & MAC_{4} & mRSS_{4} & \sigma^{2}_{4} \\
+CP_{2} & MAC_{5} & mRSS_{5} & \sigma^{2}_{5} \\
+... & ... & ... & ...
+\end{array}
+\end{displaymath}
 
 \subsection{LP的信息处理}
 完成定位校准表之后，当一个待定位移动设备出现在有效定位空间内，该设备所处的位置，就是一个待定位点(LP)，在该LP上会实时接收到一组AP信息，将这组AP信息发送到服务器端，服务器就根据校准表，对LP接收到的AP信息做正态概率计算，最后筛选出两个概率最大的CP信息。
@@ -147,8 +250,9 @@ WIFI定位技术目前有多种实现方法，但在具体应用中都存在一�
 将筛选出的CP数据，和LP发送来的AP数据，做支持向量机计算，得到一个向量集对应的位置ID，该ID就是LP在有效定位空间内的具体位置。
 \subsubsection{通过正态分布概率计算筛选有效CP}
 \begin{displaymath}
-Pl=\frac{1}{\sqrt{2\pi}\sigma}e^{\frac{-(RSS-mRSS)^{2}}{2\sigma^{2}}}
+Pr=\frac{1}{\sqrt{2\pi}\sigma}e^{\frac{-(RSS-mRSS)^{2}}{2\sigma^{2}}}
 \end{displaymath}
+
 
 \subsubsection{通过支持向量机计算LP在空间内的位置}
 
