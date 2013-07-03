@@ -262,7 +262,7 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
 
 \begin{enumerate}
 \item 从原始数据表中查找出，在每个CP上收集到的AP信息。
-  \begin{displaymath}
+  \begin{equation}
     \begin{array}{c|c}
       CP_{value} & AP_{i} \\ \hline
       CP_{0} & MAC_{1} \\
@@ -272,9 +272,9 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       CP_{0} & MAC_{5} \\
       ... & ...
     \end{array}
-  \end{displaymath}
+  \end{equation}
 \item 根据CP和AP的MAC地址信息，查找出每个AP在一个CP上收集到的所有信号值。
-  \begin{displaymath}
+  \begin{equation}
     \begin{array}{c|c|c}
       CP_{value} & AP_{i} & RSS_{(i,j)} \\ \hline
       CP_{0} & MAC_{1} & RSS_{(1,1)}...RSS_{(1,i)} \\
@@ -284,9 +284,9 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       CP_{0} & MAC_{5} & RSS_{(5,1)}...RSS_{(1,i)} \\
       ... & ... & ...
     \end{array}
-  \end{displaymath}
+  \end{equation}
 \item 计算出每个AP在一个CP上的信号平均值。
-  \begin{displaymath}
+  \begin{equation}
     \begin{array}{c|c|c}
       CP_{value} & AP_{i} & mRSS_{i} \\ \hline
       CP_{0} & MAC_{1} & mRSS_{1} \\
@@ -296,9 +296,9 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       CP_{0} & MAC_{5} & mRSS_{5} \\
       ... & ... & ...
     \end{array}
-  \end{displaymath}
+  \end{equation}
 \item 根据每个AP在一个CP上的信号平均值，和这个AP在该CP上的所有信号原值，计算出该AP在该CP上的信号值离散度方差。
-  \begin{displaymath}
+  \begin{equation}
     \begin{array}{c|c|c|c}
       CP_{value} & AP_{i} & mRSS_{i} & \sigma^{2}_{i} \\ \hline
       CP_{0} & MAC_{1} & mRSS_{1} & \sigma^{2}_{1} \\
@@ -308,9 +308,9 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       CP_{0} & MAC_{5} & mRSS_{5} & \sigma^{2}_{5} \\
       ... & ... & ... & ...
     \end{array}
-  \end{displaymath}
+  \end{equation}
 \item 将每个AP的MAC地址信息、该AP的信号平均值、该AP的信号离散度方差和该AP的校准点信息(CP)，全部存入数据库中，建立一个新数据表——校准表。
-  \begin{displaymath}
+  \begin{equation}
     \begin{array}{c|c|c|c}
       CP_{value} & AP_{i} & mRSS_{i} & \sigma^{2}_{i} \\ \hline
       CP_{0} & MAC_{1} & mRSS_{1} & \sigma^{2}_{1} \\
@@ -326,7 +326,7 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       CP_{2} & MAC_{3} & mRSS_{3} & \sigma^{2}_{3} \\
       ... & ... & ... & ...
     \end{array}
-  \end{displaymath}
+  \end{equation}
 \end{enumerate}
 
 \subsection{移动设备WIFI定位过程}
@@ -336,7 +336,7 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
 \subsubsection{通过正态分布概率计算筛选有效CP}
 \begin{enumerate}
 \item 移动设备在LP上某一时刻接收到的AP信息如下：
-  \begin{displaymath}
+  \begin{equation}
     \begin{array}{c|c}
       AP_{i} & RSS_{i} \\ \hline
       MAC_{1} & RSS_{1} \\
@@ -346,9 +346,9 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       MAC_{5} & RSS_{5} \\
       MAC_{6} & RSS_{6}
     \end{array}
-  \end{displaymath}
+  \end{equation}
 \item 从校准表中，CP值为查找条件，读取出一个CP对应的一组AP信息，如下：
-  \begin{displaymath}
+  \begin{equation}
     \begin{array}{c|c|c|c}
       CP_{value} & AP_{i} & mRSS_{i} & \sigma^{2}_{i} \\ \hline
       CP_{0} & MAC_{1} & mRSS_{1} & \sigma^{2}_{1} \\
@@ -358,7 +358,7 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       CP_{0} & MAC_{5} & mRSS_{5} & \sigma^{2}_{5} \\
       ... & ... & ... & ...
     \end{array}
-  \end{displaymath}
+  \end{equation}
 \item 查询移动设备提交的信息，和校准表中读取出的信息，找到MAC地址一致的AP数据，做正态分布概率计算，计算公式如下：
   \begin{equation}
     Pr_{i}=\frac{1}{\sqrt{2\pi}\sigma_{i}}e^{\frac{-(RSS_{i}-mRSS_{i})^{2}}{2\sigma_{i}^{2}}}
@@ -371,7 +371,7 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
 \subsubsection{通过支持向量机计算LP在空间内的位置}
 \begin{enumerate}
 \item 根据之前通过正态分布概率计算，得到的两个概率最大的CP信息，从校准表中分别读取到这两个CP所对应的AP信息，按CP分为两组，如下图：
-  \begin{displaymath}
+  \begin{equation}
     \begin{array}{c|c|c|c}
       CP_{value} & AP_{i} & mRSS_{i} & \sigma^{2}_{i} \\ \hline
       CP_{a} & MAC_{1} & mRSS_{1} & \sigma^{2}_{1} \\
@@ -381,9 +381,9 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       CP_{a} & MAC_{5} & mRSS_{5} & \sigma^{2}_{5} \\
       ... & ... & ... & ...
     \end{array}
-  \end{displaymath}
+  \end{equation}
   和
-  \begin{displaymath}
+  \begin{equation}
     \begin{array}{c|c|c|c}
       CP_{value} & AP_{i} & mRSS_{i} & \sigma^{2}_{i} \\ \hline
       CP_{b} & MAC_{1} & mRSS_{1} & \sigma^{2}_{1} \\
@@ -393,11 +393,11 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       CP_{b} & MAC_{5} & mRSS_{5} & \sigma^{2}_{5} \\
       ... & ... & ... & ...
     \end{array}
-  \end{displaymath}
+  \end{equation}
 \item 将移动设备在LP上采集到的AP信息，与以上两个CP中的AP信息，以相同MAC地址为条件做交集，得到一组AP的向量。
   \par
   $CP_{a}$的向量：
-  \begin{displaymath}
+  \begin{equation}
     \begin{array}{c|c}
       AP_{i} & mRSS_{i} \\ \hline
       MAC_{1} & mRSS_{1} \\
@@ -405,10 +405,10 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       MAC_{5} & mRSS_{5} \\
       ... & ...
     \end{array}
-  \end{displaymath}
+  \end{equation}
   \par
   $CP_{b}$的向量：
-  \begin{displaymath}
+  \begin{equation}
     \begin{array}{c|c}
       AP_{i} & mRSS_{i} \\ \hline
       MAC_{1} & mRSS_{1} \\
@@ -416,10 +416,10 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       MAC_{4} & mRSS_{4} \\
       ... & ...
     \end{array}
-  \end{displaymath}
+  \end{equation}
   \par
   移动设备在LP上采集到的AP向量：
-  \begin{displaymath}
+  \begin{equation}
     \begin{array}{c|c}
       AP_{i} & mRSS_{i} \\ \hline
       MAC_{1} & mRSS_{1} \\
@@ -427,9 +427,9 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       MAC_{3} & mRSS_{3} \\
       ... & ...
     \end{array}
-  \end{displaymath}
+  \end{equation}
 \item 两个CP的向量集分别于其CP的value值对应：
-  \begin{displaymath}
+  \begin{equation}
     \left(
     \begin{array}{c|c}
       AP_{i} & mRSS_{i} \\ \hline
@@ -439,8 +439,8 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       ... & ...
     \end{array}
     \right)CP_{a}
-  \end{displaymath}
-  \begin{displaymath}
+  \end{equation}
+  \begin{equation}
     \left(
     \begin{array}{c|c}
       AP_{i} & mRSS_{i} \\ \hline
@@ -450,7 +450,7 @@ P为WIFI发射功率，单位：瓦特(w)。由此公式可得物理信号的计
       ... & ...
     \end{array}
     \right)CP_{b}
-  \end{displaymath}
+  \end{equation}
 \item 将3中整理得到的向量，输入SVM进行训练，如图\ref{fig:no9}所示：
   \begin{figure}[!ht]\centering
     \includegraphics[keepaspectratio, scale=0.35]{no9.png}
