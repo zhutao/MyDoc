@@ -1,5 +1,5 @@
-%\documentclass[a4paper, UTF8, twocolumn ]{ctexart}
-\documentclass[a4paper, UTF8]{ctexart}
+\documentclass[a4paper, UTF8, twocolumn ]{ctexart}
+%\documentclass[a4paper, UTF8]{ctexart}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -13,8 +13,9 @@
 \usepackage{lastpage}                                           
 \usepackage{layout}                                                                          
 
-\linespread{1.5}
+\linespread{1.56}
 \columnsep = 15pt
+\columnseprule=1pt
 \begin{document}
 
 \title{\huge{基于正态分布概率计算和支持向量机计算的WiFi定位技术}}
@@ -44,7 +45,7 @@
 \subsection{定位空间(CR)}
 定位空间（calibration room），指的是提供定位功能的空间。例如采用WiFi定位的公司内部空间，公司外部无限大的空间就是不可定位空间。如图\ref{fig:CR}：
 \begin{figure}[!ht]\centering
-  \includegraphics[keepaspectratio, scale=0.3]{no2.png}
+  \includegraphics[keepaspectratio, scale=0.2]{no2.png}
   \caption{定位空间示例图\label{fig:CR}} 
 \end{figure}
 \subsection{移动终端设备}
@@ -68,14 +69,14 @@ WiFi接入设备数据包括，WiFi接入设备名MAC地址，和WiFi接入设�
 \subsection{定位区域（value）}
 定位空间是一个完整的封闭空间，要在这个空间内实现WiFi定位，就必须将这个完整的空间划分为多个小区域，每个区域都有一个ID。如图\ref{fig:value}：
 \begin{figure}[!ht]\centering
-  \includegraphics[keepaspectratio, scale=0.3]{no3.png}
+  \includegraphics[keepaspectratio, scale=0.2]{no3.png}
   \caption{定位区域示意图\label{fig:value}} 
   其中value 0中0就是该定位区域的ID。
 \end{figure}
 \subsection{定位校准点（CP）}
 在定位区域中，指定一个位置点，这个点就是定位校准点。一个定位区域内可能会有多个定位校准点，在这些点上所识别到的WiFi接入设备数据，都输入这个定位区域的定位区域数据。如图\ref{fig:CP}：
 \begin{figure}[!ht]\centering
-  \includegraphics[keepaspectratio, scale=0.3]{no4.png}
+  \includegraphics[keepaspectratio, scale=0.2]{no4.png}
   \caption{定位校准点示意图\label{fig:CP}} 
 \end{figure}
 \subsection{定位区域数据}
@@ -168,24 +169,24 @@ AP是识别到的所有WiFi接入设备名，RSS是识别到的所有WiFi设备�
 \section{实现方法}
 \subsection{总体流程}
 \begin{figure}[!ht]\centering
-  \includegraphics[keepaspectratio, scale=0.5]{no11.png}
+  \includegraphics[keepaspectratio, scale=0.3]{no11.png}
   \caption{总体流程示意图\label{fig:no11}} 
 \end{figure}
 \subsection{确定CR、Value、CP}
 \begin{enumerate}
 \item 根据实际需求，确定定位空间整体范围。如图\ref{fig:no2}：
   \begin{figure}[!ht]\centering
-    \includegraphics[keepaspectratio, scale=0.3]{no2.png}
+    \includegraphics[keepaspectratio, scale=0.2]{no2.png}
     \caption{确定定位空间\label{fig:no2}} 
   \end{figure}
 \item 在定位空间内划分出各个定位区域。如图\ref{fig:no3}：
   \begin{figure}[!ht]\centering
-    \includegraphics[keepaspectratio, scale=0.3]{no3.png}
+    \includegraphics[keepaspectratio, scale=0.2]{no3.png}
     \caption{确定定位区域\label{fig:no3}} 
   \end{figure}
 \item 在每个定位区域内确定一个或多个CP。如图\ref{fig:no4}：
   \begin{figure}[!ht]\centering
-    \includegraphics[keepaspectratio, scale=0.3]{no4.png}
+    \includegraphics[keepaspectratio, scale=0.2]{no4.png}
     \caption{确定定位校准点\label{fig:no4}} 
   \end{figure}
 \end{enumerate}
@@ -243,14 +244,14 @@ AP是识别到的所有WiFi接入设备名，RSS是识别到的所有WiFi设备�
 \par
 将特征向量输入SVM进行训练。 如图\ref{fig:no9}：
 \begin{figure}[!ht]\centering
-  \includegraphics[keepaspectratio, scale=0.5]{no9.png}
+  \includegraphics[keepaspectratio, scale=0.3]{no9.png}
   \caption{SVM训练过程\label{fig:no9}} 
 \end{figure}
 
 \subsection{将待定位数据输入SVM进行计算，得到最终定位结果}
 将LP的特征数据，输入训练完成的SVM，得到一个Value的ID值。该Value所对应的区域就是LP所在的位置。如图\ref{fig:no10}：
 \begin{figure}[!ht]\centering
-  \includegraphics[keepaspectratio, scale=0.5]{no10.png}
+  \includegraphics[keepaspectratio, scale=0.3]{no10.png}
   \caption{SVM计算过程\label{fig:no10}} 
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
