@@ -42,10 +42,10 @@
 
 \section{名词、概念和常识说明}
 \subsection{定位空间(CR)}
-定位空间（calibration room），指的是提供定位功能的空间。例如采用WiFi定位的公司内部空间，公司外部无限大的空间就是不可定位空间。如图\ref{fig:no2}：
+定位空间（calibration room），指的是提供定位功能的空间。例如采用WiFi定位的公司内部空间，公司外部无限大的空间就是不可定位空间。如图\ref{fig:CR}：
 \begin{figure}[!ht]\centering
   \includegraphics[keepaspectratio, scale=0.3]{no2.png}
-  \caption{定位空间示例图\label{fig:no2}} 
+  \caption{定位空间示例图\label{fig:CR}} 
 \end{figure}
 \subsection{移动终端设备}
 本文中的“移动终端设备”，是指拥有WiFi连接能力的移动设备，如有WiFi功能的智能手机、平板电脑和其他便携的移动终端设备。
@@ -66,17 +66,17 @@ WiFi接入设备数据包括，WiFi接入设备名MAC地址，和WiFi接入设�
 \subsection{待定位点（LP）}
 带定位点，是指一个移动终端设备，出现在定位空间内，该移动终端设备自身的位置。
 \subsection{定位区域（value）}
-定位空间是一个完整的封闭空间，要在这个空间内实现WiFi定位，就必须将这个完整的空间划分为多个小区域，每个区域都有一个ID。如图\ref{fig:no3}：
+定位空间是一个完整的封闭空间，要在这个空间内实现WiFi定位，就必须将这个完整的空间划分为多个小区域，每个区域都有一个ID。如图\ref{fig:value}：
 \begin{figure}[!ht]\centering
   \includegraphics[keepaspectratio, scale=0.3]{no3.png}
-  \caption{定位区域示意图\label{fig:no3}} 
+  \caption{定位区域示意图\label{fig:value}} 
   其中value 0中0就是该定位区域的ID。
 \end{figure}
 \subsection{定位校准点（CP）}
-在定位区域中，指定一个位置点，这个点就是定位校准点。一个定位区域内可能会有多个定位校准点，在这些点上所识别到的WiFi接入设备数据，都输入这个定位区域的定位区域数据。如图\ref{fig:no4}：
+在定位区域中，指定一个位置点，这个点就是定位校准点。一个定位区域内可能会有多个定位校准点，在这些点上所识别到的WiFi接入设备数据，都输入这个定位区域的定位区域数据。如图\ref{fig:CP}：
 \begin{figure}[!ht]\centering
   \includegraphics[keepaspectratio, scale=0.3]{no4.png}
-  \caption{定位校准点示意图\label{fig:no4}} 
+  \caption{定位校准点示意图\label{fig:CP}} 
 \end{figure}
 \subsection{定位区域数据}
 在定位区域内的定位校准点上，一次采集到的WiFi接入设备数据，就是定位区域采集数据。该数据的标示是区域ID，内容是WiFi接入设备数据。如下表所示：
@@ -175,17 +175,17 @@ AP是识别到的所有WiFi接入设备名，RSS是识别到的所有WiFi设备�
 \begin{enumerate}
 \item 根据实际需求，确定定位空间整体范围。如图\ref{fig:no2}：
   \begin{figure}[!ht]\centering
-    \includegraphics[keepaspectratio, scale=0.2]{no2.png}
+    \includegraphics[keepaspectratio, scale=0.3]{no2.png}
     \caption{确定定位空间\label{fig:no2}} 
   \end{figure}
 \item 在定位空间内划分出各个定位区域。如图\ref{fig:no3}：
   \begin{figure}[!ht]\centering
-    \includegraphics[keepaspectratio, scale=0.2]{no3.png}
+    \includegraphics[keepaspectratio, scale=0.3]{no3.png}
     \caption{确定定位区域\label{fig:no3}} 
   \end{figure}
 \item 在每个定位区域内确定一个或多个CP。如图\ref{fig:no4}：
   \begin{figure}[!ht]\centering
-    \includegraphics[keepaspectratio, scale=0.2]{no4.png}
+    \includegraphics[keepaspectratio, scale=0.3]{no4.png}
     \caption{确定定位校准点\label{fig:no4}} 
   \end{figure}
 \end{enumerate}
